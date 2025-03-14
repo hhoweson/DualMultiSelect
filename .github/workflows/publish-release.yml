@@ -21,7 +21,7 @@ jobs:
           cache: 'npm'  # Speeds up builds
 
       - name: Install dependencies
-        run: npm ci  # Faster than "npm install" for CI/CD
+        run: npm ci  # Safer for ci builds (vs npm build)
 
       - name: Build the package (Vite)
         run: npm run build

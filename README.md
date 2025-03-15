@@ -19,8 +19,8 @@ npm install dualmultiselect
 
 ### Via CDN
 ```html
-<script src="https://cdn.jsdelivr.net/npm/dualmultiselect/dist/js/dualMultiSelect.umd.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dualmultiselect/dist/css/dualMultiSelect.min.css">
+<script src="https://cdn.jsdelivr.net/npm/dualmultiselect/dist/js/DualMultiSelect.umd.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dualmultiselect/dist/css/DualMultiSelect.min.css">
 ```
 
 ### Manual Download

@@ -19,8 +19,8 @@ hljs.registerLanguage('html', html);
 document.querySelectorAll(".versionNumber").forEach(element => {
     element.textContent = __DUALMULTISELECT_VERSION__;
 });
-document.getElementById("cdnScriptTag")!.textContent = `<script src="https://cdn.jsdelivr.net/npm/dualmultiselect@${__DUALMULTISELECT_VERSION__}/dist/js/dualMultiSelect.umd.min.js"></script>`;
-document.getElementById("cdnCssTag")!.textContent = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dualmultiselect@${__DUALMULTISELECT_VERSION__}/dist/css/dualMultiSelect.min.css">`;
+document.getElementById("cdnScriptTag")!.textContent = `<script src="https://cdn.jsdelivr.net/npm/dualmultiselect@${__DUALMULTISELECT_VERSION__}/dist/js/DualMultiSelect.umd.min.js"></script>`;
+document.getElementById("cdnCssTag")!.textContent = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dualmultiselect@${__DUALMULTISELECT_VERSION__}/dist/css/DualMultiSelect.min.css">`;
 
 
 class Examples {

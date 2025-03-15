@@ -34,7 +34,9 @@ export default defineConfig(({ command, mode }) => {
                 entry: "src/index.ts",
                 name: "DualMultiSelect",
                 formats: ["es", "cjs", "umd"], // Export as ES modules, CommonJS, and UMD
-                fileName: 'js/DualMultiSelect.min',
+                fileName: (format) => {
+                    return `js/DualMultiSelect.${format}.min.js`;
+                },
                 cssFileName: 'css/DualMultiSelect.min',
             },
             target: "es2015", // Ensure compatibility with ES6 browsers

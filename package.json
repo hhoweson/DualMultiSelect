@@ -2,9 +2,9 @@
   "name": "dualmultiselect",
   "version": "1.0.0",
   "description": "A free, simple and lightweight dual listbox plugin implemented with pure JavaScript.",
-  "main": "dist/js/DualMultiSelect.min.cjs.js",
-  "module": "dist/js/DualMultiSelect.min.es.js",
-  "browser": "dist/js/DualMultiSelect.min.umd.js",
+  "main": "dist/js/DualMultiSelect.cjs.min.js",
+  "module": "dist/js/DualMultiSelect.es.min.js",
+  "browser": "dist/js/DualMultiSelect.umd.min.js",
   "types": "dist/js/DualMultiSelect.d.ts",
   "files": [
     "dist"

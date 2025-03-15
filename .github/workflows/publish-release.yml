@@ -6,7 +6,7 @@ on:
       - 'v*'
 
 permissions:
-  contents: read   # Allows the action to read the repository's contents
+  contents: write   # Allows the action to publish releases
   pages: write     # Allows the action to publish the GitHub Pages site
   id-token: write  # Required for OpenID Connect authentication (secure deployments)
 

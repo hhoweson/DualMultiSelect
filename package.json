@@ -16,7 +16,6 @@
   "homepage": "https://hhoweson.github.io/DualMultiSelect/",
   "type": "module",
   "scripts": {
-    "prepare": "npm run build",
     "dev": "vite",
     "build": "npm run build:lib && npm run build:demo",
     "build:lib": "vite build",

@@ -36,6 +36,9 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Package dist files
+        run: zip -r dist.zip dist/
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -44,6 +47,7 @@ jobs:
           body: ""  # Changelog to be added after release
           draft: false
           prerelease: false
+          files: dist.zip
 
       - name: Upload GitHub Pages Artifact
         uses: actions/upload-pages-artifact@v3

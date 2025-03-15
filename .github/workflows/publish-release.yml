@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: read   # Allows the action to read the repository's contents
+  pages: write     # Allows the action to publish the GitHub Pages site
+  id-token: write  # Required for OpenID Connect authentication (secure deployments)
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -21,7 +26,7 @@ jobs:
           cache: 'npm'  # Speeds up builds
 
       - name: Install dependencies
-        run: npm ci  # Safer for ci builds (vs npm build)
+        run: npm ci  # Safer for ci builds (vs npm install)
 
       - name: Build the package (Vite)
         run: npm run build
@@ -39,3 +44,21 @@ jobs:
           body: ""  # Changelog to be added after release
           draft: false
           prerelease: false
+
+      - name: Upload GitHub Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs  # Uploads the generated documentation to GitHub Pages
+
+
+  deploy-pages:
+    needs: publish  # Ensures deployment only happens after publishing
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

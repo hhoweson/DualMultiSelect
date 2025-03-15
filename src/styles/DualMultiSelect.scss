@@ -1,0 +1,130 @@
+$backgroundColor: #fff;
+$borderColor: #ccc;
+$optionHoverColor: #08c;
+
+$listHeight: 200px;
+$border: 1px solid $borderColor;
+$borderRadius: 5px;
+
+@mixin focusedElement {
+    border-color: rgba(82, 168, 236, 0.8);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    outline: 0;
+}
+
+.dms-container {
+    width: 100%;
+    display: flex;
+
+    &.dms-stackLists {
+        flex-direction: column;
+        align-items: stretch;
+    
+        .dms-arrows {
+            transform: rotate(90deg);
+        }
+    }
+
+    &:not(.dms-stackLists) {
+        flex-direction: row;
+        align-items: end;
+    
+        .dms-selectable, .dms-selected {
+            flex: 1 1 0;
+        }
+        .dms-arrows {
+            // Margin top is set to auto to push the arrows to the bottom of the container
+            // This is useful when there are custom headers
+            margin-top: auto;
+            height: $listHeight;
+            line-height: $listHeight;
+        }
+    }
+
+    &.dms-stickyHeaders .dms-optGroupLabel {
+        position: sticky;
+        top: 0;
+    }
+}
+
+.dms-arrows {
+    text-align: center;
+    font-size: 20px;
+    margin: 1px 7px;
+
+    // By defining the arrows icon in css as opposed to using the default html entity,
+    // Users can easily override the icon to any other icon they want.
+    &::after {
+        content: "⇆";
+        vertical-align: middle;
+    }
+}
+
+.dms-list {
+    height: $listHeight - 2px; // Subtract 2px to account for the border
+    overflow-y: auto;
+    border: $border;
+    border-radius: $borderRadius;
+    padding: 0;
+    margin:0;
+    background-color: $backgroundColor;
+
+    &:focus {
+        @include focusedElement;
+    }
+}
+
+.dms-option, .dms-optGroupLabel {
+    cursor: pointer;
+    padding: 5px 10px;
+    margin: 0;
+    background-color: $backgroundColor;
+}
+
+.dms-optGroup {
+    font-size: 15px;
+    > .dms-optGroupLabel {
+        color: #999;
+    }
+    > ul {
+        margin: 0;
+        padding: 0;
+
+        .dms-option {
+            padding-left: 20px;
+        }
+    }
+}
+
+.dms-option {
+    font-size: 14px;
+    border-bottom: 1px #eee solid;
+
+    &:hover {
+        color: #fff;
+        background-color: $optionHoverColor;
+    }
+
+    &.dms-disabled {
+        background-color: #eee;
+        color: #aaa;
+        cursor: initial;
+    }
+}
+
+.dms-header {
+    margin-bottom: 5px;
+    padding: 0 3px;
+}
+
+.dms-search {
+    width: 100%;
+    margin-bottom: 5px;
+    padding: 6px;
+    border: $border;
+    border-radius: $borderRadius;
+
+    &:focus {
+        @include focusedElement;
+    }
+}

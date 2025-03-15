@@ -1,0 +1,51 @@
+{
+  "name": "dualmultiselect",
+  "version": "1.0.0",
+  "description": "A free, simple and lightweight dual listbox plugin implemented with pure JavaScript.",
+  "main": "dist/js/DualMultiSelect.min.cjs.js",
+  "module": "dist/js/DualMultiSelect.min.es.js",
+  "browser": "dist/js/DualMultiSelect.min.umd.js",
+  "types": "dist/js/DualMultiSelect.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hhoweson/DualMultiSelect.git"
+  },
+  "type": "module",
+  "scripts": {
+    "prepare": "npm run build",
+    "dev": "vite",
+    "build": "npm run build:lib && npm run build:demo",
+    "build:lib": "vite build",
+    "build:demo": "vite build --mode demoBuild",
+    "preview": "vite preview --mode demoBuild",
+    "buildAndPreview": "npm run build && npm run preview"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "highlight.js": "^11.11.1",
+    "postcss": "^8.5.3",
+    "sass": "^1.85.1",
+    "typescript": "~5.7.2",
+    "vite": "^6.2.0",
+    "vite-plugin-dts": "^4.5.0"
+  },
+  "browserslist": [
+    "defaults"
+  ],
+  "keywords": [
+    "select",
+    "multi select",
+    "select box",
+    "multi select box",
+    "DualMultiSelect",
+    "vanilla js",
+    "typescript",
+    "vite",
+    "library"
+  ],
+  "author": "Henry Howeson",
+  "license": "MIT"
+}

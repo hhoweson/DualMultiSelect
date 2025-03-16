@@ -40,11 +40,11 @@ export default class SyncManager implements DualMultiSelectModule {
 
         const selectElementData = this.getSelectElementData();
 
-        for(const [internalElementId, unknownOptionData] of Object.entries(selectElementData)){
-            if(unknownOptionData.hasOwnProperty('children')){
+        for(const [internalElementId, internalOptionOrOptGroupElementData] of Object.entries(selectElementData)){
+            if(internalOptionOrOptGroupElementData.hasOwnProperty('children')){
             
                 // Is optGroup
-                const optGroupData = unknownOptionData as InternalOptGroupElementData;
+                const optGroupData = internalOptionOrOptGroupElementData as InternalOptGroupElementData;
 
                 // Depending on which options are selected, the optGroup will be append to either 1 or both of the lists
                 let selectableOptGroupElement: HTMLElement|null = null;
@@ -52,16 +52,11 @@ export default class SyncManager implements DualMultiSelectModule {
 
                 for(const [childInternalElementId, optionData] of Object.entries(optGroupData.children)){
 
+                    const relevantList = optionData.selected ? selectedListCopy : selectableListCopy;
+
                     // Make sure the option group exists in the relevant list
-                    if(optionData.selected){
-                        if(selectedOptGroupElement === null){
-                            selectedOptGroupElement = this.createOptGroupElement(optGroupData.label, internalElementId, selectedListCopy);
-                        }
-                    } else {
-                        if(selectableOptGroupElement === null){
-                            selectableOptGroupElement = this.createOptGroupElement(optGroupData.label, internalElementId, selectableListCopy);
-                        }
-                    }
+                    if(selectedOptGroupElement === null)
+                        selectedOptGroupElement = this.createOptGroupElement(optGroupData.label, internalElementId, relevantList);
 
                     const optGroupElement = (optionData.selected ? selectedOptGroupElement : selectableOptGroupElement) as HTMLElement;
                     const optGroupListElement = optGroupElement.querySelector('ul') as HTMLElement;
@@ -79,7 +74,7 @@ export default class SyncManager implements DualMultiSelectModule {
             } else {
                 
                 // Is option
-                const optionData = unknownOptionData as InternalOptionElementData;
+                const optionData = internalOptionOrOptGroupElementData as InternalOptionElementData;
                 const relevantList = optionData.selected ? selectedListCopy : selectableListCopy;
 
                 this.createOptionElement(

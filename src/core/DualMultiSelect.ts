@@ -3,7 +3,7 @@ import EventHandler, { Options as EventHandlerOptions } from "./EventHandler";
 import SyncManager from "./SyncManager";
 import DynamicDataHandler from "../modules/DynamicDataHandler";
 import CustomHeaders, {Options as CustomHeadersOptions} from "../modules/CustomHeaders";
-import { UniversalOptionData } from "./types";
+import { UniversalOptionData } from "../types/types";
 
 type DualMultiSelectOptions =  {
     data?: UniversalOptionData;

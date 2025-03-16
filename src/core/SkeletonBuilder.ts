@@ -1,4 +1,4 @@
-import { DualMultiSelectModule } from '../core/types';
+import { DualMultiSelectModule } from '../types/types';
 
 export interface Options {
     stackLists?: boolean;

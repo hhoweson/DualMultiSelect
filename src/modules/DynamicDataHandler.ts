@@ -1,4 +1,4 @@
-import { OptionElementData, OptGroupElementData, UniversalOptionData, DualMultiSelectModule } from '../core/types';
+import { OptionElementData, OptGroupElementData, UniversalOptionData, DualMultiSelectModule } from '../types/types';
 
 /**
  * Dynamic Data Handler

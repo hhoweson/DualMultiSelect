@@ -1,4 +1,4 @@
-import { DualMultiSelectModule } from '../core/types';
+import { DualMultiSelectModule } from '../types/types';
 import { internalElementIdDataAttribute } from './utils';
 
 export interface Options {

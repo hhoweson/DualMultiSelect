@@ -25,19 +25,24 @@ export default class SyncManager implements DualMultiSelectModule {
 
     private syncListsWithSelectElement()
     {
-        const selectableList = this.dualMultiSelectElement.querySelector('.dms-selectable .dms-list') as HTMLUListElement;
-        const selectedList = this.dualMultiSelectElement.querySelector('.dms-selected .dms-list') as HTMLUListElement;
+        type listData = {
+            originalElement: HTMLUListElement,
+            copiedElement: HTMLUListElement,
+        };
 
-        // Store the scroll positions before replacing the lists
-        const selectableScrollTop = selectableList.scrollTop;
-        const selectedScrollTop = selectedList.scrollTop;
-        
-        // Operate on shallow copies of the lists outside of the DOM
-        // This reduces the number of DOM operations and increases performance
-        const selectableListCopy = selectableList.cloneNode(false) as HTMLUListElement;
-        const selectedListCopy = selectedList.cloneNode(false) as HTMLUListElement;
+        const lists = {
+            selected: {} as listData,
+            selectable: {} as listData
+        }
 
-        const selectElementData = this.getSelectElementData();
+        for(const [listName, list] of Object.entries(lists)){
+
+            list.originalElement = this.dualMultiSelectElement.querySelector(`.dms-${listName} .dms-list`) as HTMLUListElement;
+
+            // We operate on shallow copies of the lists outside of the DOM
+            // This reduces the number of DOM operations and increases performance
+            list.copiedElement = list.originalElement.cloneNode(false) as HTMLUListElement;
+        }
 
         for(const [internalElementId, internalOptionOrOptGroupElementData] of Object.entries(selectElementData)){
             if(internalOptionOrOptGroupElementData.hasOwnProperty('children')){
@@ -46,19 +51,21 @@ export default class SyncManager implements DualMultiSelectModule {
                 const optGroupData = internalOptionOrOptGroupElementData as InternalOptGroupElementData;
 
                 // Depending on which options are selected, the optGroup will be append to either 1 or both of the lists
-                let selectableOptGroupElement: HTMLElement|null = null;
-                let selectedOptGroupElement: HTMLElement|null = null;
+                const optGroupElements = {
+                    selectable: null as HTMLElement|null,
+                    selected: null as HTMLElement|null
+                }
 
                 for(const [childInternalElementId, optionData] of Object.entries(optGroupData.children)){
 
-                    const relevantList = optionData.selected ? selectedListCopy : selectableListCopy;
+                    const relevantListName = optionData.selected ? 'selected' : 'selectable';
+                    const relevantList = lists[relevantListName].copiedElement;
 
                     // Make sure the option group exists in the relevant list
-                    if(selectedOptGroupElement === null)
-                        selectedOptGroupElement = this.createOptGroupElement(optGroupData.label, internalElementId, relevantList);
+                    if(optGroupElements[relevantListName] === null)
+                        optGroupElements[relevantListName] = this.createOptGroupElement(optGroupData.label, internalElementId, relevantList);
 
-                    const optGroupElement = (optionData.selected ? selectedOptGroupElement : selectableOptGroupElement) as HTMLElement;
-                    const optGroupListElement = optGroupElement.querySelector('ul') as HTMLElement;
+                    const optGroupListElement = optGroupElements[relevantListName].querySelector('ul') as HTMLElement;
 
                     this.createOptionElement(
                         optionData.text,
@@ -74,7 +81,8 @@ export default class SyncManager implements DualMultiSelectModule {
                 
                 // Is option
                 const optionData = internalOptionOrOptGroupElementData as InternalOptionElementData;
-                const relevantList = optionData.selected ? selectedListCopy : selectableListCopy;
+                const relevantListName = optionData.selected ? 'selected' : 'selectable';
+                const relevantList = lists[relevantListName].copiedElement;
 
                 this.createOptionElement(
                     optionData.text,
@@ -87,13 +95,14 @@ export default class SyncManager implements DualMultiSelectModule {
             }
         }
 
-        // Replace the original lists with the copied nodes
-        selectableList.replaceWith(selectableListCopy);
-        selectedList.replaceWith(selectedListCopy);
+        // Replace the original lists with the copied lists
+        // And make sure the scroll position is maintained
+        for(const list of Object.values(lists)){
+            const originalScrollTop = list.originalElement.scrollTop;
+            list.originalElement.replaceWith(list.copiedElement);
+            list.copiedElement.scrollTop = originalScrollTop;
+        }
 
-        // Restore initial scroll positions
-        selectableListCopy.scrollTop = selectableScrollTop;
-        selectedListCopy.scrollTop = selectedScrollTop;
     }
 
     /**

@@ -25,7 +25,6 @@ export default class SyncManager implements DualMultiSelectModule {
 
     private syncListsWithSelectElement()
     {
-
         const selectableList = this.dualMultiSelectElement.querySelector('.dms-selectable .dms-list') as HTMLUListElement;
         const selectedList = this.dualMultiSelectElement.querySelector('.dms-selected .dms-list') as HTMLUListElement;
 

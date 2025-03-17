@@ -39,7 +39,7 @@ export default class DualMultiSelect {
     private modules: Partial<ModuleInstances> = {};
     private moduleInitializers: ModuleInitializers = {
         'dynamicDataHandler': () => new DynamicDataHandler(
-                this.selectElement
+            this.selectElement
         ),
         'customHeaders': () => new CustomHeaders(
             this.dualMultiSelectElement,

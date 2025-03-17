@@ -1,7 +1,7 @@
 /*
     Used when setting options dynamically from external sources
-    Elements are not keyed, they are in array form
-    OptionElementData has optional properties
+    - Elements are not keyed, they are in array form
+    - OptionElementData has optional properties
 */
 export interface OptionElementData {
     text: string;
@@ -19,8 +19,8 @@ export type UniversalOptionData = (OptGroupElementData|OptionElementData)[];
 
 /*
     Used for internal tracking of option data
-    Elements are keyed by internalElementId
-    No optional properties
+    - Elements are keyed by internalElementId
+    - No optional properties
 */
 export interface InternalOptionElementData {
     text: string;

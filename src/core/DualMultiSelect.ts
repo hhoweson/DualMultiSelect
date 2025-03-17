@@ -55,7 +55,6 @@ export default class DualMultiSelect {
 
         this.initializeCoreModules();
         this.initializeRelevantOptionalModules();
-
     }
 
     private validateSelectElement(selectElement: HTMLSelectElement): void

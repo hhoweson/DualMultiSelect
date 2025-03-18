@@ -174,9 +174,9 @@
                 <p>
                     <h5>Methods</h5>
                     <ul>
-                        <li><code>setData(data)</code> - Can be used to programmatically set/update the select options. Please see the <a href="#dataFormat">DualMultiSelect data format</a> for the argument type</li>
-                        <li><code>getData()</code> - Can be used to programmatically get the select options. Please see the <a href="#dataFormat">DualMultiSelect data format</a> for the return format</li>
-                        <li><code>destroy()</code> - Destroys the DualMultiSelect instance and allows you to continue using the original select element</li>
+                        <li><code>setData(<a href="#dataFormat">UniversalOptionData</a>)</code> - Can be used to programmatically set/update the select options</li>
+                        <li><code>getData()</code> - Can be used to get the select options as <a href="#dataFormat">UniversalOptionData</a></li>
+                        <li><code>destroy()</code> - Destroys the DualMultiSelect instance and allows you to continue using the original select element in it's current state</li>
                     </ul>
                 </p>
 
@@ -251,82 +251,84 @@
 
                 <h4>DualMultiSelect Data Format</h4>
 
-                <p>
-                    Option data should be an array of objects representing either an option or an option group, each object should have the following properties:
+                <p class="mt-4">
+                    <b>UniversalOptionData</b> should be an array containing a combination of <code>OptionElementData</code> and <code>OptGroupElementData</code> objects:
                 </p>
                 
-                <b>Options:</b>
-                <table class="table table-bordered mt-2">
-                    <thead>
-                        <tr>
-                            <th>Property</th>
-                            <th>Type</th>
-                            <th>Default</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>text</td>
-                            <td>string (required)</td>
-                            <td>N/A</td>
-                            <td>The text of the option or group</td>
-                        </tr>
-                        <tr>
-                            <td>value</td>
-                            <td>string</td>
-                            <td>null</td>
-                            <td>The value of the option or group</td>
-                        </tr>
-                        <tr>
-                            <td>selected</td>
-                            <td>boolean</td>
-                            <td>false</td>
-                            <td>Whether the option is selected or not</td>
-                        </tr>
-                        <tr>
-                            <td>disabled</td>
-                            <td>boolean</td>
-                            <td>false</td>
-                            <td>Whether the option is disabled or not</td>
-                        </tr>
-                        <tr>
-                            <td>hidden</td>
-                            <td>boolean</td>
-                            <td>false</td>
-                            <td>
-                                Whether the option is hidden or not (used for searching/filtering options).<br>
-                                When all child options of an optGroup are hidden, the optGroup will also be hidden
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div style="margin-left: 20px;">
+                    <b>OptionElementData</b> (represents an <code>&lt;option&gt;</code> element):
+                    <table class="table table-bordered mt-2">
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>text</td>
+                                <td>string (required)</td>
+                                <td>N/A</td>
+                                <td>The text of the option or group</td>
+                            </tr>
+                            <tr>
+                                <td>value</td>
+                                <td>string</td>
+                                <td>null</td>
+                                <td>The value of the option or group</td>
+                            </tr>
+                            <tr>
+                                <td>selected</td>
+                                <td>boolean</td>
+                                <td>false</td>
+                                <td>Whether the option is selected or not</td>
+                            </tr>
+                            <tr>
+                                <td>disabled</td>
+                                <td>boolean</td>
+                                <td>false</td>
+                                <td>Whether the option is disabled or not</td>
+                            </tr>
+                            <tr>
+                                <td>hidden</td>
+                                <td>boolean</td>
+                                <td>false</td>
+                                <td>
+                                    Whether the option is hidden or not (used for searching/filtering options).<br>
+                                    When all child options of an optGroup are hidden, the optGroup will also be hidden
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                <b>Option Groups:</b>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Property</th>
-                            <th>Type</th>
-                            <th>Default</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>label</td>
-                            <td>string (required)</td>
-                            <td>N/A</td>
-                            <td>The label of the group</td>
-                        </tr>
-                        <tr>
-                            <td>children</td>
-                            <td>Array (required)</td>
-                            <td>N/A</td>
-                            <td>An array of option objects</td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <b>OptGroupElementData</b> (represents an <code>&lt;optgroup&gt;</code> element):
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>label</td>
+                                <td>string (required)</td>
+                                <td>N/A</td>
+                                <td>The label of the group</td>
+                            </tr>
+                            <tr>
+                                <td>children</td>
+                                <td>Array (required)</td>
+                                <td>N/A</td>
+                                <td>An array of OptionElementData objects</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
             </section>
 

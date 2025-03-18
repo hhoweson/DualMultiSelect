@@ -1,5 +1,5 @@
 import { internalElementIdDataAttribute } from './utils';
-import { InternalOptionElementData, InternalOptGroupElementData, InternalUniversalOptionData, DualMultiSelectModule, FilterFunction } from '../types/types';
+import { InternalOptionElementData, InternalOptGroupElementData, InternalUniversalOptionData, DualMultiSelectModule } from '../types/types';
 
 /**
  * SyncManager

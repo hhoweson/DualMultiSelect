@@ -39,5 +39,3 @@ export type InternalUniversalOptionData = Record<string, InternalOptGroupElement
 export interface DualMultiSelectModule {
     destroy(): void; // All modules should have a destroy method
 }
-
-export type FilterFunction = () => Boolean;

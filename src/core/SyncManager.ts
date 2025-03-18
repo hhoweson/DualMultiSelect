@@ -44,6 +44,8 @@ export default class SyncManager implements DualMultiSelectModule {
             list.copiedElement = list.originalElement.cloneNode(false) as HTMLUListElement;
         }
 
+        const selectElementData = this.getSelectElementData();
+
         for(const [internalElementId, internalOptionOrOptGroupElementData] of Object.entries(selectElementData)){
             if(internalOptionOrOptGroupElementData.hasOwnProperty('children')){
             

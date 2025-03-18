@@ -28,6 +28,7 @@ export default class DynamicDataHandler implements DualMultiSelectModule {
         }
 
         // This event is necessary for the DualMultiSelect element to update
+        // We bubble the event so that it behaves like a normal change event
         this.selectElement.dispatchEvent(new Event('change', { bubbles: true }));
 
     }

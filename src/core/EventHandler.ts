@@ -55,6 +55,7 @@ export default class EventHandler implements DualMultiSelectModule {
             }
 
             // This will trigger a change event on the select element if any changes were made
+            // We bubble the event so that it behaves like a normal change event
             if(changesMade) this.selectElement.dispatchEvent(new Event('change', { bubbles: true }));
 
         }

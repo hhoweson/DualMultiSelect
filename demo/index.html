@@ -491,6 +491,41 @@
             </section>
 
             <section>
+
+                <h4>Torture Test</h4>
+
+                <p>
+                    DualMultiSelect has been tested with 5000 options: 50 option groups, each with 100 options. The performance is acceptable, but it may be slow on older devices.<br>
+                    The following example demonstrates the performance of DualMultiSelect with a large number of options.
+                </p>
+
+                <template class="exampleCodeTemplate">
+
+                    <script>
+                        // Generate Data
+                        const tortureTestData = [];
+                        for(let i = 0; i < 50; i++) {
+                            tortureTestData.push({ label: `Group ${i+1}`, children: [] });
+                            for(let j = 0; j < 100; j++) {
+                                tortureTestData[i].children.push({ text: `Option ${i+1}-${j+1}` });
+                            }
+                        }
+                        // Actual Code
+                        const tortureTestSelect = document.querySelector("#tortureTestSelect");
+                        new DualMultiSelect(tortureTestSelect, {
+                            data: tortureTestData,
+                            stickyHeaders: true,
+                            searchBar: true
+                        });
+                    </script>
+
+                    <select multiple="multiple" id="tortureTestSelect"></select>
+
+                </template>
+
+            </section>
+
+            <section>
                 <h4>Contributing</h4>
 
                 <p>

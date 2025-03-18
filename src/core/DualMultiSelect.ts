@@ -1,7 +1,7 @@
 import SkeletonBuilder, { Options as SkeletonBuilderOptions } from "./SkeletonBuilder";
 import EventHandler, { Options as EventHandlerOptions } from "./EventHandler";
 import SyncManager from "./SyncManager";
-import DynamicDataHandler from "../modules/DynamicDataHandler";
+import DynamicDataHandler from "./DynamicDataHandler";
 import CustomHeaders, {Options as CustomHeadersOptions} from "../modules/CustomHeaders";
 import { UniversalOptionData } from "../types/types";
 
@@ -10,7 +10,6 @@ type DualMultiSelectOptions =  {
 } & SkeletonBuilderOptions & CustomHeadersOptions & EventHandlerOptions;
 
 type ModuleInstances = {
-    'dynamicDataHandler': InstanceType<typeof DynamicDataHandler>;
     'customHeaders': InstanceType<typeof CustomHeaders>;
 }
 type ModuleInitializers = {
@@ -32,15 +31,13 @@ export default class DualMultiSelect {
 
     // Core modules
     private skeletonBuilder!: SkeletonBuilder;
-    private eventHandler!: EventHandler;
+    private dynamicDataHandler!: DynamicDataHandler;
     private syncManager!: SyncManager;
+    private eventHandler!: EventHandler;
     
     // Optional modules
     private modules: Partial<ModuleInstances> = {};
     private moduleInitializers: ModuleInitializers = {
-        'dynamicDataHandler': () => new DynamicDataHandler(
-            this.selectElement
-        ),
         'customHeaders': () => new CustomHeaders(
             this.dualMultiSelectElement,
             this.getFilteredOptions(['selectableHeader', 'selectedHeader', 'searchBar'])
@@ -78,10 +75,15 @@ export default class DualMultiSelect {
         );
         this.dualMultiSelectElement = this.skeletonBuilder.dualMultiSelectElement;
 
+        this.dynamicDataHandler = new DynamicDataHandler(
+            this.selectElement
+        )
+
         // Make sure the new element syncs with the original select element
         this.syncManager = new SyncManager(
             this.selectElement,
-            this.dualMultiSelectElement
+            this.dualMultiSelectElement,
+            this.dynamicDataHandler
         );
 
         // Make clicks on the new element change the original select element
@@ -98,7 +100,7 @@ export default class DualMultiSelect {
     private initializeRelevantOptionalModules(){
 
         if(this.options.data)
-            this.getModule('dynamicDataHandler').setData(this.options.data);
+            this.dynamicDataHandler.setData(this.options.data);
 
         if(this.options.selectableHeader || this.options.selectedHeader || this.options.searchBar)
             this.getModule('customHeaders');
@@ -136,14 +138,15 @@ export default class DualMultiSelect {
 
     public setData(data: UniversalOptionData): void
     {
-        this.getModule('dynamicDataHandler').setData(data);
+        this.dynamicDataHandler.setData(data);
     }
 
     public destroy(): void
     {
         // Destroy core modules
-        this.syncManager.destroy();
         this.eventHandler.destroy();
+        this.syncManager.destroy();
+        this.dynamicDataHandler.destroy();
         this.skeletonBuilder.destroy();
 
         // Destroy any additional modules

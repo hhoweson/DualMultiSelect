@@ -1,5 +1,6 @@
 import { internalElementIdDataAttribute } from './utils';
-import { InternalOptionElementData, InternalOptGroupElementData, InternalUniversalOptionData, DualMultiSelectModule } from '../types/types';
+import { InternalOptionElementData, InternalOptGroupElementData, DualMultiSelectModule } from '../types/types';
+import DynamicDataHandler from './DynamicDataHandler';
 
 /**
  * SyncManager
@@ -9,12 +10,12 @@ import { InternalOptionElementData, InternalOptGroupElementData, InternalUnivers
  */
 export default class SyncManager implements DualMultiSelectModule {
 
-    private internalElementIdIndex = 0;
     private readonly abortController = new AbortController();
 
     constructor(
         private readonly selectElement: HTMLSelectElement,
-        private readonly dualMultiSelectElement: HTMLElement
+        private readonly dualMultiSelectElement: HTMLElement,
+        private readonly dynamicDataHandler: DynamicDataHandler
     ){
         // Make sure the lists are always in sync with the select element
 
@@ -44,7 +45,7 @@ export default class SyncManager implements DualMultiSelectModule {
             list.copiedElement = list.originalElement.cloneNode(false) as HTMLUListElement;
         }
 
-        const selectElementData = this.getSelectElementData();
+        const selectElementData = this.dynamicDataHandler.getData();
 
         for(const [internalElementId, internalOptionOrOptGroupElementData] of Object.entries(selectElementData)){
             if(internalOptionOrOptGroupElementData.hasOwnProperty('children')){
@@ -74,7 +75,6 @@ export default class SyncManager implements DualMultiSelectModule {
 
                     this.createOptionElement(
                         optionData.text,
-                        optionData.value,
                         optionData.disabled,
                         childInternalElementId,
                         optGroupListElement
@@ -95,7 +95,6 @@ export default class SyncManager implements DualMultiSelectModule {
 
                 this.createOptionElement(
                     optionData.text,
-                    optionData.value,
                     optionData.disabled,
                     internalElementId,
                     relevantList
@@ -119,7 +118,6 @@ export default class SyncManager implements DualMultiSelectModule {
      */
     private createOptionElement(
         text: string,
-        value: string,
         disabled: boolean,
         internalElementId: string,
         appendTarget: HTMLElement
@@ -158,64 +156,6 @@ export default class SyncManager implements DualMultiSelectModule {
         optGroupElement.append(optGroupListElement);
 
         return optGroupElement;
-    }
-
-    /**
-     * Fetches the data from the original select element and formats it in a way that is easier to work with.
-     */
-    private getSelectElementData(): InternalUniversalOptionData
-    {
-        const options = this.selectElement.options;
-        const fullData: InternalUniversalOptionData = {};
-
-        for (let i = 0; i < options.length; i++) {
-
-            const option_element = options[i];
-            const option_internalElementId = this.getInternalElementId(option_element, true);
-
-            const option_data: InternalOptionElementData  = {
-                text: option_element.text,
-                value: option_element.value,
-                selected: option_element.selected,
-                disabled: option_element.disabled,
-                hidden: option_element.hidden
-            };
-
-            if(option_element.parentNode instanceof HTMLOptGroupElement){
-
-                // If the option is part of an optgroup, make it a child of the optgroup
-                const optGroupElement = option_element.parentNode;
-                const optGroup_internalElementId = this.getInternalElementId(optGroupElement, true);
-
-                // If the optgroup has not been registered yet, add it
-                if(!fullData.hasOwnProperty(optGroup_internalElementId)){
-                    fullData[optGroup_internalElementId] = {
-                        label: optGroupElement.label,
-                        children: {}
-                    };
-                }
-
-                // Add the option to the optgroup
-                (fullData[optGroup_internalElementId] as InternalOptGroupElementData).children[option_internalElementId] = option_data;
-
-            } else {
-                fullData[option_internalElementId] = option_data;
-            }
-
-        }
-
-        return fullData;
-    }
-
-    private getInternalElementId(htmlElement: HTMLElement, autoCreateInternalId: boolean = false): string
-    {
-        if (!htmlElement.hasAttribute(internalElementIdDataAttribute)) {
-            if(!autoCreateInternalId) throw new Error('Element does not have an internal id!');
-            htmlElement.setAttribute(internalElementIdDataAttribute, this.internalElementIdIndex.toString());
-            this.internalElementIdIndex++;
-        }
-
-        return htmlElement.getAttribute(internalElementIdDataAttribute) as string;
     }
     
     public destroy(): void

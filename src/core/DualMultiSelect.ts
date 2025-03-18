@@ -4,6 +4,7 @@ import SyncManager from "./SyncManager";
 import DynamicDataHandler from "./DynamicDataHandler";
 import CustomHeaders, {Options as CustomHeadersOptions} from "../modules/CustomHeaders";
 import { UniversalOptionData } from "../types/types";
+import { convertInternalUniversalOptionDataToUniversalOptionData } from "./utils";
 
 type DualMultiSelectOptions =  {
     data?: UniversalOptionData;
@@ -139,6 +140,13 @@ export default class DualMultiSelect {
     public setData(data: UniversalOptionData): void
     {
         this.dynamicDataHandler.setData(data);
+    }
+
+    public getData(): UniversalOptionData
+    {
+        const internalUniversalOptionData = this.dynamicDataHandler.getData();
+        const universalOptionData = convertInternalUniversalOptionDataToUniversalOptionData(internalUniversalOptionData);
+        return universalOptionData;
     }
 
     public destroy(): void

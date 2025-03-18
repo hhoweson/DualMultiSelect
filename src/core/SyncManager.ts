@@ -60,6 +60,9 @@ export default class SyncManager implements DualMultiSelectModule {
 
                 for(const [childInternalElementId, optionData] of Object.entries(optGroupData.children)){
 
+                    // Don't create hidden options
+                    if(optionData.hidden) continue;
+
                     const relevantListName = optionData.selected ? 'selected' : 'selectable';
                     const relevantList = lists[relevantListName].copiedElement;
 
@@ -83,6 +86,10 @@ export default class SyncManager implements DualMultiSelectModule {
                 
                 // Is option
                 const optionData = internalOptionOrOptGroupElementData as InternalOptionElementData;
+
+                // Don't create hidden options
+                if(optionData.hidden) continue;
+
                 const relevantListName = optionData.selected ? 'selected' : 'selectable';
                 const relevantList = lists[relevantListName].copiedElement;
 
@@ -171,6 +178,7 @@ export default class SyncManager implements DualMultiSelectModule {
                 value: option_element.value,
                 selected: option_element.selected,
                 disabled: option_element.disabled,
+                hidden: option_element.hidden
             };
 
             if(option_element.parentNode instanceof HTMLOptGroupElement){

@@ -8,6 +8,7 @@ export interface OptionElementData {
     value?: string;
     selected?: boolean;
     disabled?: boolean;
+    hidden?: boolean;
 }
 
 export interface OptGroupElementData {
@@ -27,6 +28,7 @@ export interface InternalOptionElementData {
     value: string;
     selected: boolean;
     disabled: boolean;
+    hidden: boolean;
 }
 
 export interface InternalOptGroupElementData {

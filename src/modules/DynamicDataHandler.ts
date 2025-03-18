@@ -39,6 +39,7 @@ export default class DynamicDataHandler implements DualMultiSelectModule {
         if(typeof optionData.value === 'string') optionElement.value = optionData.value;
         if(optionData.selected) optionElement.selected = true;
         if(optionData.disabled) optionElement.disabled = true;
+        if(optionData.hidden) optionElement.hidden = true;
         return optionElement;
     }
 

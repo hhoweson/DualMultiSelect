@@ -5,8 +5,9 @@ import {
     OptGroupElementData
 } from '../types/types';
 
+type SearchFunction = (searchQuery: string, optionData: OptionElementData, optGroupData: OptGroupElementData|null) => boolean
 export interface Options {
-    searchBar?: boolean;
+    searchBar?: boolean | SearchFunction;
     selectableHeader?: HTMLElement | string | null;
     selectedHeader?: HTMLElement | string | null;
 }
@@ -34,11 +35,21 @@ export default class CustomHeaders implements DualMultiSelectModule {
         const selectableListContainer = this.dualMultiSelectElement.querySelector('.dms-selectable') as HTMLElement;
         const selectedListContainer = this.dualMultiSelectElement.querySelector('.dms-selected') as HTMLElement;
 
-        if(this.options.selectableHeader && this.options.searchBar)
-            throw new Error('The selectableHeader and searchBar options cannot be used together.');
-        else if(this.options.searchBar)
+        if(this.options.searchBar) {
+
+            if(this.options.selectableHeader)
+                throw new Error('The selectableHeader and searchBar options cannot be used together.');
+            
+            // Allow overriding the search function
+            if(typeof this.options.searchBar === 'function')
+                this.searchFunction = this.options.searchBar;
+
             this.createSearchBar(selectableListContainer);
-        else if(this.options.selectableHeader)
+
+        }
+        
+        
+        if(this.options.selectableHeader)
             this.createHeader(this.options.selectableHeader, selectableListContainer);
 
         if(this.options.selectedHeader)

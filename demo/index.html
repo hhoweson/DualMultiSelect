@@ -174,8 +174,8 @@
                 <p>
                     <h5>Methods</h5>
                     <ul>
-                        <li><code>setData(<a href="#dataFormat">UniversalOptionData</a>)</code> - Can be used to programmatically set/update the select options</li>
-                        <li><code>getData()</code> - Can be used to get the select options as <a href="#dataFormat">UniversalOptionData</a></li>
+                        <li><code>setData(<a href="#types">UniversalOptionData</a>)</code> - Can be used to programmatically set/update the select options</li>
+                        <li><code>getData()</code> - Can be used to get the select options as <a href="#types">UniversalOptionData</a></li>
                         <li><code>destroy()</code> - Destroys the DualMultiSelect instance and allows you to continue using the original select element in it's current state</li>
                     </ul>
                 </p>
@@ -209,15 +209,15 @@
                     <tbody>
                         <tr>
                             <td><a href="#customDataExample">data</a></td>
-                            <td>Array</td>
+                            <td><a href="#types">UniversalOptionData</a></td>
                             <td>null</td>
-                            <td>Please see the <a href="#dataFormat">DualMultiSelect data format</a></td>
+                            <td>The data to initialize the DualMultiSelect element with. This will overwrite any current options</td>
                         </tr>
                         <tr>
                             <td><a href="#searchBarExample">searchBar</a></td>
-                            <td>boolean</td>
+                            <td>boolean | <a href="#types">SearchFunction</a></td>
                             <td>false</td>
-                            <td>Whether to show a search bar above the selectable list (not compatible with selectableHeader)</td>
+                            <td>Set to true to create a searchbar above the selectableList. If you want to use a custom <a href="#types">SearchFunction</a> pass that instead. <i>*not compatible with selectableHeader</i></td>
                         </tr>
                         <tr>
                             <td><a href="#stackedListsExample">stackLists</a></td>
@@ -241,15 +241,16 @@
                             <td><a href="#customHeadersExample">selectedHeader</a></td>
                             <td>HTMLElement | string</td>
                             <td>null</td>
-                            <td>Custom header for the selected list (not compatible with searchbar)</td>
+                            <td>Custom header for the selected list <i>*not compatible with searchbar</i></td>
                         </tr>
                     </tbody>
                 </table>
+
             </section>
 
-            <section id="dataFormat">
+            <section id="types">
 
-                <h4>DualMultiSelect Data Format</h4>
+                <h4>Types</h4>
 
                 <p class="mt-4">
                     <b>UniversalOptionData</b> should be an array containing a combination of <code>OptionElementData</code> and <code>OptGroupElementData</code> objects:
@@ -329,6 +330,18 @@
                         </tbody>
                     </table>
                 </div>
+
+                <p class="mt-5">
+                    <b>SearchFunction</b> - A function that takes the search query, an <code>OptionElementData</code> object and the parent <code>OptGroupElementData</code> object (if applicable) and returns a boolean.<br>
+                    The function should return true if the option should be shown or false if it should be hidden. Here is an example search function:
+                </p>
+
+                <pre><code class="codeBlock"><!--
+                 -->function searchFunction(searchQuery, optionData, optGroupData) => {
+<!--             -->    const query = searchQuery.toLowerCase();
+<!--             -->    return optionData.text.toLowerCase().includes(query) || (optGroupData && optGroupData.label.toLowerCase().includes(query));
+<!--             -->}<!--
+             --></code></pre>
 
             </section>
 
@@ -547,7 +560,6 @@
                     <b>Feature ideas:</b>
                     <ul>
                         <li>Better mobile support (dynamic resizing)</li>
-                        <li>Customizable Search Function</li>
                         <li>Custom themes</li>
                         <li>Keyboard navigation support for accessibility.</li>
                         <li>Additional accessibility support eg. ARIA attributes</li>

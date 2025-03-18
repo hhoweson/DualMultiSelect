@@ -1,4 +1,9 @@
-import { DualMultiSelectModule } from '../types/types';
+import {
+    DualMultiSelectModule,
+    UniversalOptionData,
+    OptionElementData,
+    OptGroupElementData
+} from '../types/types';
 
 export interface Options {
     searchBar?: boolean;
@@ -16,7 +21,12 @@ export default class CustomHeaders implements DualMultiSelectModule {
         selectedHeader: null
     }
 
-    constructor(private readonly dualMultiSelectElement: HTMLElement, private readonly options: Options = {}){
+    constructor(
+        private readonly dualMultiSelectElement: HTMLElement,
+        private readonly getSelectElementData: () => UniversalOptionData,
+        private readonly setSelectElementData: (data: UniversalOptionData) => void,
+        private readonly options: Options = {}
+    ){
 
         // Merge default options with user options
         this.options = {...this.defaultOptions, ...this.options};
@@ -62,11 +72,27 @@ export default class CustomHeaders implements DualMultiSelectModule {
 
     private createSearchBar(listContainer: HTMLElement): void
     {
-        const self = this;
         const searchElement = this.createSearchHeaderElement();
 
-        searchElement.addEventListener('input', function(){
-            self.filterOptions(searchElement.value);
+        let debouncer: ReturnType<typeof setTimeout>|null = null;
+
+        searchElement.addEventListener('input', () => {
+
+            // Sometimes the input event is triggered more quickly than the previous event can be handled
+            // This causes searches to queue up, which is slow
+            // The debouncer avoids this by skipping the search if another input event is triggered within 1ms (queued up)
+            if(debouncer) clearTimeout(debouncer);
+
+            debouncer = setTimeout(() => {
+        
+                const searchQuery = searchElement.value;
+
+                let universalOptionData = this.getSelectElementData();
+                universalOptionData = this.hideOptionsThatDoNotMatchSearchQuery(universalOptionData, searchQuery);
+                this.setSelectElementData(universalOptionData);
+
+            }, 1);
+            
         }, { signal: this.abortController.signal });
 
         this.createHeader(searchElement, listContainer);
@@ -81,42 +107,46 @@ export default class CustomHeaders implements DualMultiSelectModule {
         return searchInput;
     }
 
-    private filterOptions(query: string): void
+    private hideOptionsThatDoNotMatchSearchQuery(universalOptionData: UniversalOptionData, searchQuery: string): UniversalOptionData
     {
-        const optGroupElements = this.dualMultiSelectElement.querySelectorAll('.dms-optGroup') as NodeListOf<HTMLElement>;
-        const optionElements = this.dualMultiSelectElement.querySelectorAll('.dms-option') as NodeListOf<HTMLElement>;
+        return universalOptionData.map(internalOptionOrOptGroupElementData => {
+            if(internalOptionOrOptGroupElementData.hasOwnProperty('children')){
 
-        optionElements.forEach((optionElement) => {
+                // Is optGroup
+                const optGroupData = internalOptionOrOptGroupElementData as OptGroupElementData;
 
-            const optionText = optionElement.textContent?.toLowerCase() || '';
+                optGroupData.children = optGroupData.children.map(optionData => {
+                    optionData.hidden = !this.searchFunction(searchQuery, optionData, optGroupData);
+                    return optionData;
+                });
 
-            const match = this.searchFunction(query, optionText);
+                return optGroupData;
 
-            if(match)
-                optionElement.style.display = '';
-            else
-                optionElement.style.display = 'none';
-            
-        });
+            } else {
 
-        optGroupElements.forEach((optGroupElement) => {
+                // Is option
+                const optionData = internalOptionOrOptGroupElementData as OptionElementData;
+                optionData.hidden = !this.searchFunction(searchQuery, optionData, null);
+                return optionData;
 
-            const optGroupText = optGroupElement.querySelector('.dms-optGroupLabel')?.textContent?.toLowerCase() || '';
-            const visibleChildren = optGroupElement.querySelectorAll('.dms-option:not([style="display: none;"])');
-
-            const match = this.searchFunction(query, optGroupText);
-
-            if(match || visibleChildren.length > 0)
-                optGroupElement.style.display = '';
-            else
-                optGroupElement.style.display = 'none';
-
+            }
         });
     }
 
-    private searchFunction(searchQuery: string, optionText: string): boolean
+    private searchFunction(searchQuery: string, optionData: OptionElementData, optGroupData: OptGroupElementData|null): boolean
     {
-        return optionText.toLowerCase().includes(searchQuery.toLowerCase());
+        if(optGroupData !== null && this.stringContainsSubstring(optGroupData.label, searchQuery))
+            return true;
+
+        if(this.stringContainsSubstring(optionData.text, searchQuery))
+            return true;
+
+        return false;
+    }
+
+    private stringContainsSubstring(string: string, substring: string): boolean
+    {
+        return string.toLowerCase().includes(substring.toLowerCase());
     }
 
     public destroy(): void

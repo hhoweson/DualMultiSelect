@@ -41,6 +41,8 @@ export default class DualMultiSelect {
     private moduleInitializers: ModuleInitializers = {
         'customHeaders': () => new CustomHeaders(
             this.dualMultiSelectElement,
+            this.getData.bind(this),
+            this.setData.bind(this),
             this.getFilteredOptions(['selectableHeader', 'selectedHeader', 'searchBar'])
         )
     };

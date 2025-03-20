@@ -65,6 +65,9 @@ export default class SkeletonBuilder implements DualMultiSelectModule {
         if(!!this.options.stackLists) container.classList.add('dms-stackLists');
         if(!!this.options.stickyHeaders) container.classList.add('dms-stickyHeaders');
 
+        // Apply classes from the original select element
+        container.classList.add(...this.selectElement.classList);
+
         return container;   
     }
 

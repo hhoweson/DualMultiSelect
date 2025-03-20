@@ -16,7 +16,7 @@ export default class SkeletonBuilder implements DualMultiSelectModule {
 
     public dualMultiSelectElement: HTMLElement;
 
-    private initialSelectElementStyling!: Record<string, string>;
+    private initialSelectElementStyling: Record<string, string> = {};
 
     private readonly defaultOptions = {
         stackLists: false,
@@ -99,22 +99,33 @@ export default class SkeletonBuilder implements DualMultiSelectModule {
 
     private hideSelectElement(): void
     {
-        this.initialSelectElementStyling = {
-            position: this.selectElement.style.position,
-            left: this.selectElement.style.left,
-            visibility: this.selectElement.style.visibility
+        const stylingOverrides = {
+            'position': 'absolute', // Make sure the select element does not affect the layout
+            'pointer-events': 'none', // Make sure the select element is not clickable
+            // Hide the select element off screen
+            'left': '-9999px',
+            'opacity': '0',
+            'width': '1px',
+            'height': '1px',
         };
 
-        this.selectElement.style.position = 'absolute';
-        this.selectElement.style.left = '-9999px';
-        this.selectElement.style.visibility = 'hidden';
+        for(const [styleName, styleDeclaration] of Object.entries(stylingOverrides)){
+
+            // Save old styles
+            this.initialSelectElementStyling[styleName] = this.selectElement.style.getPropertyValue(styleName);
+
+            // Apply new styles
+            // We use !important to make sure the styles aren't overwritten by bootstrap or other css frameworks
+            this.selectElement.style.setProperty(styleName, styleDeclaration, 'important');
+
+        }
     }
 
     public destroy(): void
     {
         // Reset the original select element styling
-        for(const [key, value] of Object.entries(this.initialSelectElementStyling)){
-            this.selectElement.style[key as any] = value;
+        for(const [styleName, styleDeclaration] of Object.entries(this.initialSelectElementStyling)){
+            this.selectElement.style.setProperty(styleName, styleDeclaration);
         }
         // Remove the dual multi select element
         this.dualMultiSelectElement.remove();
